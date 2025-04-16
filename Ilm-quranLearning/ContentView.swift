@@ -9,16 +9,57 @@ import SwiftUI
 
 struct ContentView: View {
     var body: some View {
-        VStack {
-            Image(systemName: "globe")
-                .imageScale(.large)
-                .foregroundStyle(.tint)
-            Text("Hello, world!")
+        TabView {
+            HomeView()
+                .embedInNav()
+                .tabItem {
+                    Image(systemName: "house")
+                    Text("Home")
+                }
+
+            FavouritesView()
+                .embedInNav()
+                .tabItem {
+                    Image(systemName: "heart")
+                    Text("Favourites")
+                }
+
+            FeedView()
+                .embedInNav()
+                .tabItem {
+                    Image(systemName: "text.justify")
+                    Text("Feed")
+                }
+
+            ReflectionsView()
+                .embedInNav()
+                .tabItem {
+                    Image(systemName: "square.and.pencil")
+                    Text("Reflections")
+                }
+
+            SettingsView()
+                .embedInNav()
+                .tabItem {
+                    Image(systemName: "gearshape")
+                    Text("Settings")
+                }
         }
-        .padding()
+        .tint(Color(hex: "722345"))
+        .environment(\.horizontalSizeClass, .compact) // ✅ Forces bottom tab on iPad
     }
 }
 
+// ✅ Forces navigation without sidebar on iPad
+extension View {
+    func embedInNav() -> some View {
+        NavigationView {
+            self
+                .navigationBarHidden(true)
+        }
+        .navigationViewStyle(.stack)
+    }
+}
 #Preview {
     ContentView()
 }
