@@ -38,7 +38,7 @@ struct KeyVersesDetailView: View {
                                             .italic()
                                             .foregroundColor(.gray)
 
-                                        let isLong = verse.translation.count > 350
+                                        let isLong = verse.translation.count > 200
 
                                         Group {
                                             if isLong {

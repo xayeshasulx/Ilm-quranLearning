@@ -6,6 +6,14 @@
 	objectVersion = 77;
 	objects = {
 
+/* Begin PBXBuildFile section */
+		2578245A2DB01C6700B322CF /* FirebaseAnalytics in Frameworks */ = {isa = PBXBuildFile; productRef = 257824592DB01C6700B322CF /* FirebaseAnalytics */; };
+		2578245C2DB01C6700B322CF /* FirebaseAuth in Frameworks */ = {isa = PBXBuildFile; productRef = 2578245B2DB01C6700B322CF /* FirebaseAuth */; };
+		2578245E2DB01C6700B322CF /* FirebaseCore in Frameworks */ = {isa = PBXBuildFile; productRef = 2578245D2DB01C6700B322CF /* FirebaseCore */; };
+		257824602DB01C6700B322CF /* FirebaseFirestore in Frameworks */ = {isa = PBXBuildFile; productRef = 2578245F2DB01C6700B322CF /* FirebaseFirestore */; };
+		257824622DB01C6700B322CF /* FirebaseMessaging in Frameworks */ = {isa = PBXBuildFile; productRef = 257824612DB01C6700B322CF /* FirebaseMessaging */; };
+/* End PBXBuildFile section */
+
 /* Begin PBXContainerItemProxy section */
 		257823832DB0168500B322CF /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -52,6 +60,11 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				2578245A2DB01C6700B322CF /* FirebaseAnalytics in Frameworks */,
+				257824602DB01C6700B322CF /* FirebaseFirestore in Frameworks */,
+				257824622DB01C6700B322CF /* FirebaseMessaging in Frameworks */,
+				2578245E2DB01C6700B322CF /* FirebaseCore in Frameworks */,
+				2578245C2DB01C6700B322CF /* FirebaseAuth in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -112,6 +125,11 @@
 			);
 			name = "Ilm-quranLearning";
 			packageProductDependencies = (
+				257824592DB01C6700B322CF /* FirebaseAnalytics */,
+				2578245B2DB01C6700B322CF /* FirebaseAuth */,
+				2578245D2DB01C6700B322CF /* FirebaseCore */,
+				2578245F2DB01C6700B322CF /* FirebaseFirestore */,
+				257824612DB01C6700B322CF /* FirebaseMessaging */,
 			);
 			productName = "Ilm-quranLearning";
 			productReference = 257823722DB0168400B322CF /* Ilm-quranLearning.app */;
@@ -195,6 +213,9 @@
 			);
 			mainGroup = 257823692DB0168400B322CF;
 			minimizedProjectReferenceProxies = 1;
+			packageReferences = (
+				257824582DB01C6700B322CF /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */,
+			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = 257823732DB0168400B322CF /* Products */;
 			projectDirPath = "";
@@ -558,6 +579,45 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		257824582DB01C6700B322CF /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/firebase/firebase-ios-sdk";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 11.11.0;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		257824592DB01C6700B322CF /* FirebaseAnalytics */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 257824582DB01C6700B322CF /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebaseAnalytics;
+		};
+		2578245B2DB01C6700B322CF /* FirebaseAuth */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 257824582DB01C6700B322CF /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebaseAuth;
+		};
+		2578245D2DB01C6700B322CF /* FirebaseCore */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 257824582DB01C6700B322CF /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebaseCore;
+		};
+		2578245F2DB01C6700B322CF /* FirebaseFirestore */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 257824582DB01C6700B322CF /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebaseFirestore;
+		};
+		257824612DB01C6700B322CF /* FirebaseMessaging */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 257824582DB01C6700B322CF /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebaseMessaging;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = 2578236A2DB0168400B322CF /* Project object */;
 }

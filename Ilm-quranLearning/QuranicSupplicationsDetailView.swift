@@ -40,7 +40,7 @@ struct QuranicSupplicationsDetailView: View {
                                             .italic()
                                             .foregroundColor(.gray)
 
-                                        let isLong = supp.translation.count > 350
+                                        let isLong = supp.translation.count > 200
 
                                         Group {
                                             if isLong {
