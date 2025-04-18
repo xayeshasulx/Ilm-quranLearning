@@ -4,13 +4,14 @@
 //
 //  Created by Ayesha Suleman on 14/04/2025.
 //
-
 import SwiftUI
 
 struct KeyThemesGridView: View {
     let surah: String
     let themes: [KeyTheme]
+
     @Environment(\.presentationMode) var presentationMode
+    @EnvironmentObject var favoritesStore: FavoritesStore
 
     var body: some View {
         GeometryReader { geo in
@@ -18,7 +19,6 @@ struct KeyThemesGridView: View {
             let itemWidth = geo.size.width / 3
 
             VStack(spacing: 0) {
-                // 🔝 Top Bar
                 ZStack(alignment: .bottom) {
                     Color(hex: "722345")
                         .ignoresSafeArea(edges: .top)
@@ -51,7 +51,6 @@ struct KeyThemesGridView: View {
                     .font(.subheadline)
                     .padding(.top, 10)
 
-                // 🔳 Grid of Themes
                 ScrollView {
                     LazyVGrid(columns: columns, spacing: 0) {
                         ForEach(themes) { theme in
@@ -65,21 +64,30 @@ struct KeyThemesGridView: View {
         }
     }
 
-    // ✅ Grid Item View
     @ViewBuilder
     private func themeGridItem(theme: KeyTheme, itemWidth: CGFloat) -> some View {
-        NavigationLink(destination: KeyThemesDetailView(themes: themes, selectedTheme: theme)) {
-            VStack(spacing: 0) {
+        ZStack(alignment: .topTrailing) {
+            NavigationLink(destination: KeyThemesDetailView(themes: themes, selectedTheme: theme)
+                .environmentObject(favoritesStore)) {
                 Text(theme.translation)
                     .font(.caption)
                     .foregroundColor(.gray)
                     .lineLimit(6)
                     .multilineTextAlignment(.center)
                     .padding(6)
+                    .frame(width: itemWidth, height: itemWidth)
+                    .background(Color.white)
+                    .border(Color.black, width: 0.5)
             }
-            .frame(width: itemWidth, height: itemWidth)
-            .background(Color.white)
-            .border(Color.black, width: 0.5)
+
+            Button(action: {
+                favoritesStore.toggleFavorite(theme, to: "Default")
+            }) {
+                Image(systemName: favoritesStore.isFavorited(theme) ? "heart.fill" : "heart")
+                    .foregroundColor(Color(hex: "C33B76"))
+                    .padding(6)
+            }
+
         }
     }
 }

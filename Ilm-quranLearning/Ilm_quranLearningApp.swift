@@ -6,9 +6,11 @@
 //
 import SwiftUI
 import FirebaseCore
+import FirebaseAuth
 
 @main
 struct Ilm_quranLearningApp: App {
+    @StateObject private var viewModel = AuthViewModel()
 
     init() {
         FirebaseApp.configure()
@@ -16,9 +18,13 @@ struct Ilm_quranLearningApp: App {
 
     var body: some Scene {
         WindowGroup {
-            NavigationStack {
-                RegisterView() // Entry point is now RegisterView
+            if viewModel.isSignedIn {
+                ContentView()
+            } else {
+                LoginView()
             }
         }
     }
 }
+
+

@@ -1,14 +1,12 @@
 //
-//  ReflectionsView.swift
-//  Ilm
+//  ReflectionCreateNewView.swift
+//  Ilm-quranLearning
 //
-//  Created by Ayesha Suleman on 23/03/2025.
+//  Created by Ayesha Suleman on 17/04/2025.
 //
 import SwiftUI
 
-struct ReflectionsView: View {
-    var reflection: Reflection
-
+struct ReflectionCreateNewView: View {
     @Environment(\.dismiss) private var dismiss
     @EnvironmentObject var reflectionsStore: ReflectionsStore
 
@@ -19,6 +17,7 @@ struct ReflectionsView: View {
 
     var body: some View {
         VStack(spacing: 0) {
+            // Top bar
             ZStack(alignment: .bottom) {
                 Color(hex: "722345").ignoresSafeArea(edges: .top)
 
@@ -32,7 +31,7 @@ struct ReflectionsView: View {
 
                     Spacer()
 
-                    Text("Edit Reflection")
+                    Text("New Reflection")
                         .font(.title2)
                         .fontWeight(.semibold)
                         .foregroundColor(Color(hex: "D4B4AC"))
@@ -46,29 +45,25 @@ struct ReflectionsView: View {
 
             ScrollView {
                 VStack(alignment: .leading, spacing: 0) {
-                    if let source = reflection.sourceText, !source.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
-                        VStack(alignment: .leading, spacing: 4) {
-                            Text("Post:")
-                                .font(.footnote)
-                                .foregroundColor(.secondary)
-
-                            Text(source)
-                                .padding()
-                                .background(Color(hex: "D4B4AC"))
-                                .cornerRadius(8)
-                                .padding(.bottom, 16)
-                        }
-                    }
-
                     TextField("Title", text: $title)
                         .font(.title2)
                         .padding(.bottom, 4)
 
                     Divider()
 
-                    TextEditor(text: $bodyText)
-                        .frame(minHeight: 200)
-                        .padding(.top, 8)
+                    ZStack(alignment: .topLeading) {
+                        if bodyText.isEmpty {
+                            Text("Type here...")
+                                .foregroundColor(.gray)
+                                .padding(.top, 18)
+                                .padding(.horizontal, 6)
+                        }
+
+                        TextEditor(text: $bodyText)
+                            .padding(.top, 8)
+                            .opacity(bodyText.isEmpty ? 0.85 : 1)
+                    }
+                    .frame(minHeight: 300)
 
                     HStack {
                         Button(action: saveReflection) {
@@ -96,10 +91,6 @@ struct ReflectionsView: View {
                 .padding()
             }
         }
-        .onAppear {
-            title = reflection.title
-            bodyText = reflection.body
-        }
         .alert("Failed to save reflection.", isPresented: $showError) {
             Button("OK", role: .cancel) {}
         }
@@ -111,24 +102,19 @@ struct ReflectionsView: View {
         let safeTitle = title.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty ? "Untitled" : title
         let safeBody = bodyText.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty ? "Untitled" : bodyText
 
-        let updated = Reflection(
-            id: reflection.id,
+        let newReflection = Reflection(
+            id: UUID().uuidString,
             title: safeTitle,
             body: safeBody,
-            timestamp: Date(),
-            sourceText: reflection.sourceText
+            timestamp: Date()
         )
 
-        reflectionsStore.save(updated) { success in
+        reflectionsStore.save(newReflection) { success in
             isSaving = false
             success ? dismiss() : (showError = true)
         }
     }
 }
-
-
-
-
 
 
 

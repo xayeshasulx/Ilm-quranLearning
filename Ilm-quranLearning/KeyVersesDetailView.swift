@@ -20,6 +20,7 @@ struct KeyVersesDetailView: View {
                     LazyVStack(spacing: 0) {
                         ForEach(verses.indices, id: \.self) { index in
                             let verse = verses[index]
+
                             ZStack {
                                 Color.white.ignoresSafeArea()
 
@@ -44,7 +45,7 @@ struct KeyVersesDetailView: View {
                                             if isLong {
                                                 Text(verse.translation)
                                                     .font(.body)
-                                                    .lineLimit(5)
+                                                    .lineLimit(4)
                                                     .multilineTextAlignment(.leading)
 
                                                 Button("Expand") {
@@ -153,13 +154,15 @@ struct FullVerseView: View {
                     Text(verse.title).font(.title3).bold()
                     Text(verse.arabic).font(.title)
                     Text(verse.transliteration).italic().foregroundColor(.gray)
-                    Text(verse.translation)
+                    Text(verse.translation).font(.body)
                 }
                 .padding()
             }
         }
     }
 }
+
+
 
 
 

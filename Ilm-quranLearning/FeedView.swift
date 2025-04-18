@@ -23,10 +23,8 @@ struct FeedView: View {
                 LazyVStack(spacing: 0) {
                     ForEach(shuffledFeed.indices, id: \.self) { index in
                         let item = shuffledFeed[index]
-
                         ZStack {
                             Color.white.ignoresSafeArea()
-
                             GeometryReader { _ in
                                 VStack(spacing: 24) {
                                     VStack(spacing: 4) {
@@ -46,6 +44,10 @@ struct FeedView: View {
                                         verseView(verse)
                                     } else if let insight = item.ayahInsight {
                                         insightView(insight)
+                                    } else if let theme = item.keyTheme {
+                                        keyThemeView(theme)
+                                    } else if let overview = item.surahOverview {
+                                        surahOverviewView(overview)
                                     } else if let supp = item.quranicSupplication {
                                         supplicationView(supp)
                                     } else if let word = item.arabicWord {
@@ -95,7 +97,7 @@ struct FeedView: View {
             .onAppear(perform: generateShuffledFeed)
             .sheet(item: $expandedItem) { item in
                 if let verse = item.keyVerse {
-                    FullVerseView(verse: verse)
+                    FullVerseView(verse: verse) 
                 } else {
                     FullTextView(title: item.categoryLabel, text: item.plainText)
                 }
@@ -149,7 +151,7 @@ struct FeedView: View {
             Text(verse.title).font(.title3).fontWeight(.semibold).multilineTextAlignment(.center)
             Text(verse.arabic).font(.title).multilineTextAlignment(.center)
             Text(verse.transliteration).italic().foregroundColor(.gray)
-            expandableText(verse.translation) {
+            expandableText(verse.translation, limit: 200) {
                 expandedItem = FeedItem(keyVerse: verse)
             }
         }
@@ -166,30 +168,87 @@ struct FeedView: View {
     }
 
     @ViewBuilder
-    func supplicationView(_ supp: QuranicSupplication) -> some View {
+    func keyThemeView(_ theme: KeyTheme) -> some View {
+        let isLong = theme.translation.count > 800
         VStack(spacing: 20) {
-            Text(supp.reference).font(.title3).fontWeight(.semibold).multilineTextAlignment(.center)
-            Text(supp.arabic).font(.title).multilineTextAlignment(.center)
-            Text(supp.transliteration).italic().foregroundColor(.gray)
-            expandableText(supp.translation) {
-                expandedItem = FeedItem(quranicSupplication: supp)
-            }
-            if !supp.notes.isEmpty {
-                Text(supp.notes).font(.footnote).foregroundColor(.secondary)
+            if isLong {
+                Text(theme.translation)
+                    .font(.body)
+                    .lineLimit(15)
+                    .multilineTextAlignment(.leading)
+                Button("Expand") {
+                    expandedItem = FeedItem(keyTheme: theme)
+                }
+                .font(.subheadline)
+                .foregroundColor(Color(hex: "722345"))
+            } else {
+                Text(theme.translation)
+                    .font(.body)
+                    .multilineTextAlignment(.leading)
             }
         }
     }
+
+    @ViewBuilder
+    func surahOverviewView(_ overview: SurahOverview) -> some View {
+        Text(overview.translation)
+            .font(.body)
+            .multilineTextAlignment(.leading)
+    }
+
+    @ViewBuilder
+    func supplicationView(_ supp: QuranicSupplication) -> some View {
+        let isLong = supp.translation.count > 200
+
+        VStack(spacing: 20) {
+            Group {
+                Text(supp.reference)
+                    .font(.title3)
+                    .fontWeight(.semibold)
+                    .multilineTextAlignment(.center)
+
+                Text(supp.arabic)
+                    .font(.title)
+                    .multilineTextAlignment(.center)
+
+                Text(supp.transliteration)
+                    .italic()
+                    .foregroundColor(.gray)
+
+                Text(supp.translation)
+                    .font(.body)
+                    .lineLimit(isLong ? 6 : nil)
+                    .multilineTextAlignment(.leading)
+
+                if !supp.notes.isEmpty {
+                    Text(supp.notes)
+                        .font(.footnote)
+                        .foregroundColor(.secondary)
+                }
+            }
+
+            if isLong {
+                Button("Expand") {
+                    expandedItem = FeedItem(quranicSupplication: supp)
+                }
+                .font(.subheadline)
+                .foregroundColor(Color(hex: "722345"))
+            }
+        }
+    }
+
+
 
     @ViewBuilder
     func arabicWordView(_ word: ArabicWord) -> some View {
         VStack(spacing: 20) {
             Text(word.arabic).font(.title).multilineTextAlignment(.center)
             Text(word.transliteration).italic().foregroundColor(.gray)
-            expandableText(word.translation) {
-                expandedItem = FeedItem(arabicWord: word)
-            }
+            Text(word.translation).font(.body).multilineTextAlignment(.leading)
             if !word.occurrences.isEmpty {
-                Text("Occurrences: \(word.occurrences)").font(.footnote).foregroundColor(.secondary)
+                Text("Occurrences: \(word.occurrences)")
+                    .font(.footnote)
+                    .foregroundColor(.secondary)
             }
         }
     }
@@ -202,11 +261,14 @@ struct FeedView: View {
     }
 
     @ViewBuilder
-    func expandableText(_ text: String, action: @escaping () -> Void) -> some View {
-        let isLong = text.count > 350
+    func expandableText(_ text: String, limit: Int = 350, action: @escaping () -> Void) -> some View {
+        let isLong = text.count > limit
         if isLong {
             VStack(spacing: 12) {
-                Text(text).font(.body).lineLimit(6).multilineTextAlignment(.leading)
+                Text(text)
+                    .font(.body)
+                    .lineLimit(6)
+                    .multilineTextAlignment(.leading)
                 Button("Expand", action: action)
                     .font(.subheadline)
                     .foregroundColor(Color(hex: "722345"))
@@ -217,11 +279,8 @@ struct FeedView: View {
     }
 }
 
-// MARK: - FeedItem
-
 struct FeedItem: Identifiable, Equatable {
     var id = UUID()
-
     var keyVerse: KeyVerse?
     var ayahInsight: AyahInsight?
     var keyTheme: KeyTheme?
@@ -229,7 +288,6 @@ struct FeedItem: Identifiable, Equatable {
     var quranicSupplication: QuranicSupplication?
     var arabicWord: ArabicWord?
     var text: String?
-
     var surahName: String = ""
     var categoryLabel: String = ""
 
@@ -240,58 +298,14 @@ struct FeedItem: Identifiable, Equatable {
         if let surahOverview = surahOverview { return surahOverview.translation }
         if let quranicSupplication = quranicSupplication { return quranicSupplication.translation }
         if let arabicWord = arabicWord { return arabicWord.translation }
+        if let keyVerse = keyVerse { return keyVerse.translation }
         return ""
     }
 
-    static func ==(lhs: FeedItem, rhs: FeedItem) -> Bool {
+    static func == (lhs: FeedItem, rhs: FeedItem) -> Bool {
         lhs.id == rhs.id
     }
 }
-
-struct FullTextView: View {
-    var title: String
-    var text: String
-    @Environment(\.dismiss) var dismiss
-
-    var body: some View {
-        VStack(spacing: 0) {
-            ZStack(alignment: .bottom) {
-                Color(hex: "722345").ignoresSafeArea(edges: .top)
-
-                HStack {
-                    Button { dismiss() } label: {
-                        Image(systemName: "xmark")
-                            .font(.title2)
-                            .foregroundColor(.white)
-                    }
-                    .padding(.leading, 16)
-
-                    Spacer()
-
-                    Text("Full Text")
-                        .font(.title2)
-                        .fontWeight(.semibold)
-                        .foregroundColor(Color(hex: "D4B4AC"))
-
-                    Spacer()
-                    Spacer().frame(width: 32)
-                }
-                .padding(.vertical, 8)
-            }
-            .frame(height: 56)
-
-            ScrollView {
-                VStack(alignment: .leading, spacing: 24) {
-                    Text(text)
-                        .font(.body)
-                        .multilineTextAlignment(.leading)
-                }
-                .padding(20)
-            }
-        }
-    }
-}
-
 
 
 

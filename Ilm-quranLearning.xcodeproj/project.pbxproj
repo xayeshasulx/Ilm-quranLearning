@@ -12,6 +12,7 @@
 		2578245E2DB01C6700B322CF /* FirebaseCore in Frameworks */ = {isa = PBXBuildFile; productRef = 2578245D2DB01C6700B322CF /* FirebaseCore */; };
 		257824602DB01C6700B322CF /* FirebaseFirestore in Frameworks */ = {isa = PBXBuildFile; productRef = 2578245F2DB01C6700B322CF /* FirebaseFirestore */; };
 		257824622DB01C6700B322CF /* FirebaseMessaging in Frameworks */ = {isa = PBXBuildFile; productRef = 257824612DB01C6700B322CF /* FirebaseMessaging */; };
+		257824DC2DB0856400B322CF /* FirebaseStorage in Frameworks */ = {isa = PBXBuildFile; productRef = 257824DB2DB0856400B322CF /* FirebaseStorage */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -65,6 +66,7 @@
 				257824622DB01C6700B322CF /* FirebaseMessaging in Frameworks */,
 				2578245E2DB01C6700B322CF /* FirebaseCore in Frameworks */,
 				2578245C2DB01C6700B322CF /* FirebaseAuth in Frameworks */,
+				257824DC2DB0856400B322CF /* FirebaseStorage in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -91,6 +93,7 @@
 				257823742DB0168400B322CF /* Ilm-quranLearning */,
 				257823852DB0168500B322CF /* Ilm-quranLearningTests */,
 				2578238F2DB0168500B322CF /* Ilm-quranLearningUITests */,
+				257824DA2DB0856400B322CF /* Frameworks */,
 				257823732DB0168400B322CF /* Products */,
 			);
 			sourceTree = "<group>";
@@ -103,6 +106,13 @@
 				2578238C2DB0168500B322CF /* Ilm-quranLearningUITests.xctest */,
 			);
 			name = Products;
+			sourceTree = "<group>";
+		};
+		257824DA2DB0856400B322CF /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = Frameworks;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -130,6 +140,7 @@
 				2578245D2DB01C6700B322CF /* FirebaseCore */,
 				2578245F2DB01C6700B322CF /* FirebaseFirestore */,
 				257824612DB01C6700B322CF /* FirebaseMessaging */,
+				257824DB2DB0856400B322CF /* FirebaseStorage */,
 			);
 			productName = "Ilm-quranLearning";
 			productReference = 257823722DB0168400B322CF /* Ilm-quranLearning.app */;
@@ -616,6 +627,11 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 257824582DB01C6700B322CF /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
 			productName = FirebaseMessaging;
+		};
+		257824DB2DB0856400B322CF /* FirebaseStorage */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 257824582DB01C6700B322CF /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebaseStorage;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};

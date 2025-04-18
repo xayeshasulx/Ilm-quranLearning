@@ -1,17 +1,17 @@
 {
   "images" : [
     {
-      "filename" : "bismillah.png",
+      "filename" : "Frame (3).png",
       "idiom" : "universal",
       "scale" : "1x"
     },
     {
-      "filename" : "bismillah@2x.png",
+      "filename" : "Frame (4).png",
       "idiom" : "universal",
       "scale" : "2x"
     },
     {
-      "filename" : "bismillah@3x.png",
+      "filename" : "Frame (5).png",
       "idiom" : "universal",
       "scale" : "3x"
     }

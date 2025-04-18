@@ -4,62 +4,94 @@
 //
 //  Created by Ayesha Suleman on 16/04/2025.
 //
-
 import SwiftUI
 
+// MARK: - Custom EnvironmentKey for Tab Control
+private struct SelectedTabKey: EnvironmentKey {
+    static var defaultValue: Binding<Int> = .constant(0)
+}
+
+extension EnvironmentValues {
+    var selectedTabIndex: Binding<Int> {
+        get { self[SelectedTabKey.self] }
+        set { self[SelectedTabKey.self] = newValue }
+    }
+}
+
+// MARK: - Main App Shell
 struct ContentView: View {
+    @StateObject private var viewModel = AuthViewModel()
+    @StateObject private var favoritesStore = FavoritesStore()
+    @StateObject private var reflectionsStore = ReflectionsStore()
+    @State private var selectedTab = 0
+
     var body: some View {
-        TabView {
+        TabView(selection: $selectedTab) {
             HomeView()
-                .embedInNav()
+                .navigationWrapper()
                 .tabItem {
                     Image(systemName: "house")
                     Text("Home")
                 }
+                .tag(0)
 
             FavouritesView()
-                .embedInNav()
+                .navigationWrapper()
                 .tabItem {
                     Image(systemName: "heart")
                     Text("Favourites")
                 }
+                .tag(1)
 
             FeedView()
-                .embedInNav()
+                .navigationWrapper()
                 .tabItem {
                     Image(systemName: "text.justify")
                     Text("Feed")
                 }
+                .tag(2)
 
-            ReflectionsView()
-                .embedInNav()
+            ReflectionsListView()
+                .navigationWrapper()
                 .tabItem {
                     Image(systemName: "square.and.pencil")
                     Text("Reflections")
                 }
+                .tag(3)
 
             SettingsView()
-                .embedInNav()
+                .navigationWrapper()
                 .tabItem {
                     Image(systemName: "gearshape")
                     Text("Settings")
                 }
+                .tag(4)
         }
         .tint(Color(hex: "722345"))
-        .environment(\.horizontalSizeClass, .compact) // ✅ Forces bottom tab on iPad
+        .environment(\.horizontalSizeClass, .compact)
+        .environmentObject(viewModel)
+        .environmentObject(favoritesStore)
+        .environmentObject(reflectionsStore)
+        .environment(\.selectedTabIndex, $selectedTab) // ✅ Inject for external control
     }
 }
 
-// ✅ Forces navigation without sidebar on iPad
+// MARK: - Navigation Wrapper Helper
 extension View {
-    func embedInNav() -> some View {
-        NavigationView {
+    func navigationWrapper() -> some View {
+        NavigationStack {
             self
                 .navigationBarHidden(true)
+                .navigationBarBackButtonHidden(true)
         }
-        .navigationViewStyle(.stack)
     }
 }
+
+
 #Preview {
     ContentView()
+        .environmentObject(AuthViewModel())
+        .environmentObject(FavoritesStore())
+        .environmentObject(ReflectionsStore()) // ✅ Fix for previews
 }
+

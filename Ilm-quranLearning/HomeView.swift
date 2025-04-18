@@ -20,25 +20,25 @@ struct SurahData: Codable {
 
 struct HomeView: View {
     let dailyVerse: Verse?
-
+    
     init() {
         self.dailyVerse = Self.loadDailyVerse()
     }
-
+    
     var body: some View {
         GeometryReader { geo in
             let isIpad = geo.size.width > 600
-
+            
             ZStack {
                 Color.white.ignoresSafeArea()
-
+                
                 VStack(spacing: 0) {
                     topBar(isIpad: isIpad)
-
+                    
                     ScrollView(showsIndicators: false) {
                         VStack(spacing: 24) {
                             WeeklyChallengeButton(isIpad: isIpad)
-
+                            
                             LazyVGrid(
                                 columns: Array(repeating: GridItem(.flexible(), spacing: 20), count: 2),
                                 spacing: 20
@@ -51,7 +51,7 @@ struct HomeView: View {
                                 HomeGridButton(title: "Surah Overviews", destination: AnyView(SurahOverviewSurahView()), isIpad: isIpad)
                             }
                             .padding(.horizontal)
-                        }   
+                        }
                         .padding(.top, 30)
                         .padding(.bottom, 40)
                     }
@@ -59,7 +59,7 @@ struct HomeView: View {
             }
         }
     }
-
+    
     private func topBar(isIpad: Bool) -> some View {
         VStack(alignment: .leading, spacing: isIpad ? 36 : 16) {
             Text("Daily Verse")
@@ -67,26 +67,26 @@ struct HomeView: View {
                 .foregroundColor(Color(hex: "D4B4AC"))
                 .frame(maxWidth: .infinity, alignment: .center)
                 .padding(.top, isIpad ? 100 : 60)
-
+            
             if let verse = dailyVerse {
                 VStack(alignment: .leading, spacing: isIpad ? 24 : 12) {
                     Text(verse.title)
                         .font(isIpad ? .title2 : .subheadline)
                         .foregroundColor(Color(hex: "D4B4AC"))
-
+                    
                     VStack(spacing: isIpad ? 20 : 10) {
                         Text(verse.arabic)
                             .font(.system(size: isIpad ? 32 : 22))
                             .foregroundColor(Color(hex: "D4B4AC"))
                             .multilineTextAlignment(.center)
-
+                        
                         Text(verse.transliteration)
                             .font(isIpad ? .title3 : .caption)
                             .italic()
                             .foregroundColor(Color(hex: "D4B4AC"))
                             .multilineTextAlignment(.leading)
                     }
-
+                    
                     Text(verse.translation)
                         .font(isIpad ? .title3 : .caption)
                         .foregroundColor(Color(hex: "D4B4AC"))
@@ -102,19 +102,21 @@ struct HomeView: View {
         .padding(.bottom, isIpad ? 90 : 60)
         .background(Color(hex: "722345").ignoresSafeArea(edges: .top))
     }
-
+    
     static func loadDailyVerse() -> Verse? {
         guard let url = Bundle.main.url(forResource: "key_verses", withExtension: "json"),
               let data = try? Data(contentsOf: url),
               let surahs = try? JSONDecoder().decode([SurahData].self, from: data) else {
             return nil
         }
-
+        
         let allVerses = surahs.flatMap { $0.posts }
-        guard !allVerses.isEmpty else { return nil }
-
+        let shortVerses = allVerses.filter { $0.translation.count <= 200 } // only short verses display
+        
+        guard !shortVerses.isEmpty else { return nil }
+        
         let dayOfYear = Calendar.current.ordinality(of: .day, in: .year, for: Date()) ?? 0
-        return allVerses[dayOfYear % allVerses.count]
+        return shortVerses[dayOfYear % shortVerses.count]
     }
 }
 

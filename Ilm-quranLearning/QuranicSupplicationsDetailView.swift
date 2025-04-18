@@ -21,6 +21,7 @@ struct QuranicSupplicationsDetailView: View {
                     LazyVStack(spacing: 0) {
                         ForEach(supplications.indices, id: \.self) { index in
                             let supp = supplications[index]
+                            let isLong = supp.translation.count > 200
 
                             ZStack {
                                 Color.white.ignoresSafeArea()
@@ -40,25 +41,15 @@ struct QuranicSupplicationsDetailView: View {
                                             .italic()
                                             .foregroundColor(.gray)
 
-                                        let isLong = supp.translation.count > 200
-
-                                        Group {
-                                            if isLong {
-                                                Text(supp.translation)
-                                                    .font(.body)
-                                                    .lineLimit(6)
-                                                    .multilineTextAlignment(.leading)
-
-                                                Button("Expand") {
-                                                    expandedSupp = supp
-                                                }
-                                                .font(.subheadline)
-                                                .foregroundColor(Color(hex: "722345"))
-                                            } else {
-                                                Text(supp.translation)
-                                                    .font(.body)
-                                                    .multilineTextAlignment(.leading)
-                                            }
+                                        if isLong {
+                                            Text(supp.translation)
+                                                .font(.body)
+                                                .lineLimit(6)
+                                                .multilineTextAlignment(.leading)
+                                        } else {
+                                            Text(supp.translation)
+                                                .font(.body)
+                                                .multilineTextAlignment(.leading)
                                         }
 
                                         if !supp.notes.isEmpty {
@@ -66,6 +57,14 @@ struct QuranicSupplicationsDetailView: View {
                                                 .font(.footnote)
                                                 .foregroundColor(.secondary)
                                                 .multilineTextAlignment(.leading)
+                                        }
+
+                                        if isLong {
+                                            Button("Expand") {
+                                                expandedSupp = supp
+                                            }
+                                            .font(.subheadline)
+                                            .foregroundColor(Color(hex: "722345"))
                                         }
                                     }
                                     .padding(.horizontal, 20)
@@ -132,7 +131,6 @@ struct FullSupplicationView: View {
 
     var body: some View {
         VStack(spacing: 0) {
-            // Top Bar
             ZStack(alignment: .bottom) {
                 Color(hex: "722345").ignoresSafeArea(edges: .top)
 
@@ -158,7 +156,6 @@ struct FullSupplicationView: View {
             }
             .frame(height: 56)
 
-            // Content
             ScrollView {
                 VStack(alignment: .leading, spacing: 24) {
                     Text(supp.reference).font(.title3).bold()

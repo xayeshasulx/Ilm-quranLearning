@@ -41,7 +41,7 @@ struct AyahInsightsSurahView: View {
 
                     Spacer()
 
-                    Text("Key Verses")
+                    Text("Ayah Insights")
                         .font(.title2)
                         .fontWeight(.semibold)
                         .foregroundColor(Color(hex: "D4B4AC"))

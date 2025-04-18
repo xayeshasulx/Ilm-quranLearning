@@ -113,8 +113,8 @@ struct LoginView: View {
                 .navigationDestination(isPresented: $navigateToRegister) {
                     RegisterView()
                 }
-                .navigationDestination(isPresented: $navigateToHome) {
-                    ContentView() // or ContentView()
+                .fullScreenCover(isPresented: $navigateToHome) {
+                    ContentView()
                 }
             }
         }
