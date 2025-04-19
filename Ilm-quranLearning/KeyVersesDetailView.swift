@@ -9,7 +9,10 @@ import SwiftUI
 struct KeyVersesDetailView: View {
     let verses: [KeyVerse]
     let selectedVerse: KeyVerse
+
     @Environment(\.presentationMode) var presentationMode
+    @EnvironmentObject var favouritesStore: FavouritesStore
+
     @State private var expandedVerse: KeyVerse?
     @State private var currentIndex: Int = 0
 
@@ -62,9 +65,9 @@ struct KeyVersesDetailView: View {
                                     }
                                     .padding(.horizontal, 20)
                                 }
-                                .frame(maxWidth: .infinity, maxHeight: .infinity)
                                 .padding(.top, 56)
                                 .padding(.bottom, 40)
+                                .frame(maxWidth: .infinity, maxHeight: .infinity)
                             }
                             .frame(height: geo.size.height - 56)
                             .containerRelativeFrame(.vertical)
@@ -161,13 +164,5 @@ struct FullVerseView: View {
         }
     }
 }
-
-
-
-
-
-
-
-
 
 

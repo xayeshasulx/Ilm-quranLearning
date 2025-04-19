@@ -11,7 +11,8 @@ struct KeyThemesGridView: View {
     let themes: [KeyTheme]
 
     @Environment(\.presentationMode) var presentationMode
-    @EnvironmentObject var favoritesStore: FavoritesStore
+    @EnvironmentObject var favouritesStore: FavouritesStore
+    @State private var hasLoaded = false
 
     var body: some View {
         GeometryReader { geo in
@@ -20,13 +21,12 @@ struct KeyThemesGridView: View {
 
             VStack(spacing: 0) {
                 ZStack(alignment: .bottom) {
-                    Color(hex: "722345")
-                        .ignoresSafeArea(edges: .top)
+                    Color(hex: "722345").ignoresSafeArea(edges: .top)
 
                     HStack {
-                        Button(action: {
+                        Button {
                             presentationMode.wrappedValue.dismiss()
-                        }) {
+                        } label: {
                             Image(systemName: "chevron.left")
                                 .font(.title2)
                                 .foregroundColor(.white)
@@ -51,10 +51,19 @@ struct KeyThemesGridView: View {
                     .font(.subheadline)
                     .padding(.top, 10)
 
-                ScrollView {
-                    LazyVGrid(columns: columns, spacing: 0) {
-                        ForEach(themes) { theme in
-                            themeGridItem(theme: theme, itemWidth: itemWidth)
+                if !hasLoaded {
+                    ProgressView().onAppear {
+                        favouritesStore.loadFoldersFromFirestore()
+                        DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
+                            hasLoaded = true
+                        }
+                    }
+                } else {
+                    ScrollView {
+                        LazyVGrid(columns: columns, spacing: 0) {
+                            ForEach(themes) { theme in
+                                themeGridItem(theme: theme, itemWidth: itemWidth)
+                            }
                         }
                     }
                 }
@@ -66,9 +75,11 @@ struct KeyThemesGridView: View {
 
     @ViewBuilder
     private func themeGridItem(theme: KeyTheme, itemWidth: CGFloat) -> some View {
-        ZStack(alignment: .topTrailing) {
-            NavigationLink(destination: KeyThemesDetailView(themes: themes, selectedTheme: theme)
-                .environmentObject(favoritesStore)) {
+        ZStack(alignment: .bottomTrailing) {
+            NavigationLink(
+                destination: KeyThemesDetailView(themes: themes, selectedTheme: theme)
+                    .environmentObject(favouritesStore)
+            ) {
                 Text(theme.translation)
                     .font(.caption)
                     .foregroundColor(.gray)
@@ -80,14 +91,11 @@ struct KeyThemesGridView: View {
                     .border(Color.black, width: 0.5)
             }
 
-            Button(action: {
-                favoritesStore.toggleFavorite(theme, to: "Default")
-            }) {
-                Image(systemName: favoritesStore.isFavorited(theme) ? "heart.fill" : "heart")
+            if favouritesStore.isFavourited(theme) {
+                Image(systemName: "heart.fill")
                     .foregroundColor(Color(hex: "C33B76"))
                     .padding(6)
             }
-
         }
     }
 }

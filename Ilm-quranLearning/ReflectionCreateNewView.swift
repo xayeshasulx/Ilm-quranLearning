@@ -69,14 +69,14 @@ struct ReflectionCreateNewView: View {
                         Button(action: saveReflection) {
                             if isSaving {
                                 ProgressView()
-                                    .frame(width: 200)
+                                    .frame(width: 300)
                                     .padding()
                                     .background(Color(hex: "A46A79"))
                                     .foregroundColor(.white)
                                     .cornerRadius(12)
                             } else {
                                 Text("Save Reflection")
-                                    .frame(width: 200)
+                                    .frame(width: 300)
                                     .padding()
                                     .background(Color(hex: "A46A79"))
                                     .foregroundColor(.white)
@@ -86,7 +86,7 @@ struct ReflectionCreateNewView: View {
                         .disabled(isSaving)
                     }
                     .frame(maxWidth: .infinity)
-                    .padding(.top, 20)
+                    .padding(.top, 30)
                 }
                 .padding()
             }

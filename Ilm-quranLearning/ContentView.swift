@@ -21,7 +21,7 @@ extension EnvironmentValues {
 // MARK: - Main App Shell
 struct ContentView: View {
     @StateObject private var viewModel = AuthViewModel()
-    @StateObject private var favoritesStore = FavoritesStore()
+    @StateObject private var favoritesStore = FavouritesStore()
     @StateObject private var reflectionsStore = ReflectionsStore()
     @State private var selectedTab = 0
 
@@ -35,7 +35,7 @@ struct ContentView: View {
                 }
                 .tag(0)
 
-            FavouritesView()
+            FavouritesListView()
                 .navigationWrapper()
                 .tabItem {
                     Image(systemName: "heart")
@@ -91,7 +91,7 @@ extension View {
 #Preview {
     ContentView()
         .environmentObject(AuthViewModel())
-        .environmentObject(FavoritesStore())
-        .environmentObject(ReflectionsStore()) // ✅ Fix for previews
+        .environmentObject(FavouritesStore())
+        .environmentObject(ReflectionsStore())
 }
 

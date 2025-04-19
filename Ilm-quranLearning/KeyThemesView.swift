@@ -4,7 +4,6 @@
 //
 //  Created by Ayesha Suleman on 08/04/2025.
 //
-
 import Foundation
 
 struct KeyThemePost: Codable {
@@ -13,23 +12,41 @@ struct KeyThemePost: Codable {
 }
 
 struct KeyTheme: Codable, Identifiable, Equatable, Hashable {
-    var id = UUID()
+    let id: String
     let translation: String
 
-    private enum CodingKeys: String, CodingKey {
+    enum CodingKeys: String, CodingKey {
+        case id
         case translation = "text"
+    }
+
+    init(id: String = UUID().uuidString, translation: String) {
+        self.id = id
+        self.translation = translation
     }
 
     init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
         self.translation = try container.decode(String.self, forKey: .translation)
+
+        // ✅ Decode id if it exists — otherwise generate and LOG it
+        if let existingId = try? container.decode(String.self, forKey: .id) {
+            self.id = existingId
+        } else {
+            let generated = UUID().uuidString
+            print("Missing ID for: \(self.translation), generated: \(generated)")
+            self.id = generated
+        }
     }
 
-    init(translation: String) {
-        self.translation = translation
+    func hash(into hasher: inout Hasher) {
+        hasher.combine(id)
     }
 
     static func == (lhs: KeyTheme, rhs: KeyTheme) -> Bool {
-        lhs.translation == rhs.translation
+        lhs.id == rhs.id
     }
 }
+
+
+

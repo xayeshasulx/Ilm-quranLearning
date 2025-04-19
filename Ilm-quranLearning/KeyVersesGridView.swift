@@ -9,48 +9,21 @@ import SwiftUI
 struct KeyVersesGridView: View {
     let surah: String
     let verses: [KeyVerse]
+
     @Environment(\.presentationMode) var presentationMode
+    @EnvironmentObject var favouritesStore: FavouritesStore
 
     var body: some View {
         GeometryReader { geo in
-            let columns: [GridItem] = Array(repeating: GridItem(.flexible(), spacing: 0), count: 3)
+            let columns = Array(repeating: GridItem(.flexible(), spacing: 0), count: 3)
             let itemWidth = geo.size.width / 3
 
             VStack(spacing: 0) {
-                // 🔝 Top Bar
-                ZStack(alignment: .bottom) {
-                    Color(hex: "722345")
-                        .ignoresSafeArea(edges: .top)
-
-                    HStack {
-                        Button(action: {
-                            presentationMode.wrappedValue.dismiss()
-                        }) {
-                            Image(systemName: "chevron.left")
-                                .font(.title2)
-                                .foregroundColor(.white)
-                        }
-                        .padding(.leading, 16)
-
-                        Spacer()
-
-                        Text("Key Verses")
-                            .font(.title2)
-                            .fontWeight(.semibold)
-                            .foregroundColor(Color(hex: "D4B4AC"))
-
-                        Spacer()
-                        Spacer().frame(width: 32)
-                    }
-                    .padding(.vertical, 8)
-                }
-                .frame(height: 56)
-
+                topBar
                 Text(surah)
                     .font(.subheadline)
                     .padding(.top, 10)
 
-                // 🔳 Grid of Verses
                 ScrollView {
                     LazyVGrid(columns: columns, spacing: 0) {
                         ForEach(verses) { verse in
@@ -64,28 +37,67 @@ struct KeyVersesGridView: View {
         }
     }
 
-    // ✅ Break into subview for type-checking performance
+    // MARK: - Top Bar
+    private var topBar: some View {
+        ZStack(alignment: .bottom) {
+            Color(hex: "722345").ignoresSafeArea(edges: .top)
+
+            HStack {
+                Button {
+                    presentationMode.wrappedValue.dismiss()
+                } label: {
+                    Image(systemName: "chevron.left")
+                        .font(.title2)
+                        .foregroundColor(.white)
+                }
+                .padding(.leading, 16)
+
+                Spacer()
+
+                Text("Key Verses")
+                    .font(.title2)
+                    .fontWeight(.semibold)
+                    .foregroundColor(Color(hex: "D4B4AC"))
+
+                Spacer()
+                Spacer().frame(width: 32)
+            }
+            .padding(.vertical, 8)
+        }
+        .frame(height: 56)
+    }
+
+    // MARK: - Grid Item
     @ViewBuilder
     private func verseGridItem(verse: KeyVerse, itemWidth: CGFloat) -> some View {
-        NavigationLink(destination: KeyVersesDetailView(verses: verses, selectedVerse: verse)) {
-            VStack(spacing: 0) {
-                Text(verse.title)
-                    .font(.caption2)
-                    .foregroundColor(.black)
-                    .lineLimit(1)
-                    .padding(4)
+        ZStack(alignment: .bottomLeading) {
+            NavigationLink(destination: KeyVersesDetailView(verses: verses, selectedVerse: verse)) {
+                VStack(spacing: 0) {
+                    Text(verse.title)
+                        .font(.caption2)
+                        .foregroundColor(.black)
+                        .lineLimit(1)
+                        .padding(4)
 
-                Text(verse.translation)
-                    .font(.caption)
-                    .foregroundColor(.gray)
-                    .lineLimit(4)
-                    .multilineTextAlignment(.center)
+                    Text(verse.translation)
+                        .font(.caption)
+                        .foregroundColor(.gray)
+                        .lineLimit(4)
+                        .multilineTextAlignment(.center)
+                        .padding(6)
+                }
+                .frame(width: itemWidth, height: itemWidth)
+                .background(Color.white)
+                .border(Color.black, width: 0.5)
+            }
+
+            if favouritesStore.isFavourited(KeyTheme(translation: verse.translation)) {
+                Image(systemName: "heart.fill")
+                    .foregroundColor(Color(hex: "C33B76"))
                     .padding(6)
             }
-            .frame(width: itemWidth, height: itemWidth)
-            .background(Color.white)
-            .border(Color.black, width: 0.5)
         }
     }
 }
+
 
